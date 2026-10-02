@@ -4,6 +4,13 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 const db = require('./models');
+const cors = require('cors');
+
+//bridge prot talking
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}))
 
 //api route
 const authRoutes = require('./routes/authRoute');
