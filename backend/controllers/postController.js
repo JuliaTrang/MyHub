@@ -8,7 +8,7 @@ const getAllPosts = async(req,res)=>{
                     {
                         model: db.Users, 
                         as: 'author', 
-                        attributes: ['id', 'username']
+                        attributes: ['id', 'username', 'avatar']
                     },
                     {
                         model: db.Comments, 
@@ -17,7 +17,7 @@ const getAllPosts = async(req,res)=>{
                                 {
                                     model: db.Users, 
                                     as: 'author', 
-                                    attributes: ['id', 'username']
+                                    attributes: ['id', 'username', 'avatar']
                                 }
                             ],
                         as: 'comments', 
@@ -26,7 +26,7 @@ const getAllPosts = async(req,res)=>{
                 ]
             });
         if(allPosts.length == 0){
-            return res.status(400).json('no post yet!');
+            return res.status(200).json('no post yet!');
         }
         return res.status(200).json({allPosts: allPosts});
     }
@@ -41,7 +41,7 @@ const getPost = async (req,res)=>{
         const userId = req.params.id; //user id
         const userPosts = await db.Posts.findAll({where: {userId}});
         if(userPosts.length === 0){
-            return res.status(400).json({message: 'no post yet!'});
+            return res.status(200).json({message: 'no post yet!'});
         }
         return res.status(200).json({userPosts: userPosts});
     }
@@ -58,12 +58,12 @@ const createPost = async(req,res)=>{
             return res.status(400).json({message: 'log in to continue!'});
         }
         const {title, content} = req.body;
-        await db.Posts.create({
+        const newPost = await db.Posts.create({
             userId,
             title,
             content
         });
-        res.status(200).json({message: 'create new post successfully!'});
+        res.status(200).json({message: 'create new post successfully!', postId: newPost.id});
     }
     catch(error){
         return res.status(500).json({message: "server connect error!"})

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import theme from '../theme';
 
 export default function CommentSection({ postId, comments: initialComments }) {
   const { user } = useAuth();
@@ -9,22 +10,24 @@ export default function CommentSection({ postId, comments: initialComments }) {
   const [editingId, setEditingId] = useState(null);
   const [editContent, setEditContent] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
+    setSubmitting(true);
     try {
       await api.post(`/comment/${postId}`, { content: newComment });
+      // Re-fetch this post's data to get updated comments with author info
+      const res = await api.get(`/post`);
+      const updated = res.data.allPosts?.find((p) => p.id === postId);
+      if (updated) setComments(updated.comments || []);
       setNewComment('');
       setError('');
-      // Refresh comments by re-fetching the post
-      const res = await api.get('/post');
-      const updatedPost = res.data.allPosts?.find((p) => p.id === postId);
-      if (updatedPost) {
-        setComments(updatedPost.comments || []);
-      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add comment');
+      setError(err.response?.data?.message || 'Failed to post comment');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -32,192 +35,295 @@ export default function CommentSection({ postId, comments: initialComments }) {
     if (!window.confirm('Delete this comment?')) return;
     try {
       await api.delete(`/comment/${commentId}`);
-      setComments(comments.filter((c) => c.id !== commentId));
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to delete comment');
+      setError(err.response?.data?.message || 'Failed to delete');
     }
   };
 
-  const handleStartEdit = (comment) => {
-    setEditingId(comment.id);
-    setEditContent(comment.content);
-  };
-
   const handleSaveEdit = async (commentId) => {
+    if (!editContent.trim()) return;
     try {
       await api.put(`/comment/${commentId}`, { content: editContent });
-      setComments(
-        comments.map((c) =>
-          c.id === commentId ? { ...c, content: editContent } : c
-        )
+      setComments((prev) =>
+        prev.map((c) => (c.id === commentId ? { ...c, content: editContent } : c))
       );
       setEditingId(null);
       setEditContent('');
       setError('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update comment');
+      setError(err.response?.data?.message || 'Failed to update');
     }
   };
 
+  const isMyComment = (comment) =>
+    user && comment.author && comment.author.username === user.username;
+
   return (
-    <div style={styles.section}>
-      <h3 style={styles.heading}>Comments ({comments.length})</h3>
+    <div style={s.section}>
+      <h3 style={s.heading}>
+        <span style={s.headingIcon}>💬</span>
+        Comments <span style={s.count}>({comments.length})</span>
+      </h3>
 
-      {error && <p style={styles.error}>{error}</p>}
+      {error && <div style={s.errorBox}>{error}</div>}
 
-      {user && (
-        <form onSubmit={handleAddComment} style={styles.form}>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-            style={styles.textarea}
-            rows={3}
-          />
-          <button type="submit" style={styles.submitBtn}>Post Comment</button>
-        </form>
-      )}
-
-      {comments.length === 0 && (
-        <p style={styles.noComments}>No comments yet. Be the first!</p>
-      )}
-
-      {comments.map((comment) => (
-        <div key={comment.id} style={styles.comment}>
-          {editingId === comment.id ? (
-            <div>
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                style={styles.textarea}
-                rows={2}
-              />
-              <div style={styles.editActions}>
-                <button onClick={() => handleSaveEdit(comment.id)} style={styles.saveBtn}>Save</button>
-                <button onClick={() => setEditingId(null)} style={styles.cancelBtn}>Cancel</button>
-              </div>
+      {/* Add comment form */}
+      {user ? (
+        <form onSubmit={handleAddComment} style={s.form}>
+          <div style={s.inputRow}>
+            <div style={s.myAvatar}>
+              {user.avatar
+                ? <img src={`http://localhost:3001/${user.avatar}`} alt="" style={s.myAvatarImg} />
+                : <span>{user.username?.[0]?.toUpperCase()}</span>
+              }
             </div>
-          ) : (
-            <>
-              <div style={styles.commentHeader}>
-                <strong style={styles.commentAuthor}>
-                  {comment.author ? comment.author.username : 'User'}
-                </strong>
-              </div>
-              <p style={styles.commentContent}>{comment.content}</p>
-              {user && comment.author && comment.author.username === user.username && (
-                <div style={styles.commentActions}>
-                  <button onClick={() => handleStartEdit(comment)} style={styles.editBtn}>Edit</button>
-                  <button onClick={() => handleDelete(comment.id)} style={styles.deleteBtn}>Delete</button>
-                </div>
-              )}
-            </>
-          )}
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Share your thoughts..."
+              style={s.textarea}
+              rows={2}
+            />
+          </div>
+          <div style={s.formFooter}>
+            <button type="submit" disabled={submitting} style={s.submitBtn}>
+              {submitting ? 'Posting…' : '✉️ Post Comment'}
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div style={s.loginNote}>
+          Please <a href="/login" style={s.loginLink}>log in</a> to leave a comment.
         </div>
-      ))}
+      )}
+
+      {/* Comments list */}
+      <div style={s.list}>
+        {comments.length === 0 ? (
+          <div style={s.empty}>No comments yet — be the first! 🌸</div>
+        ) : (
+          comments.map((comment, i) => {
+            const initial = comment.author?.username?.[0]?.toUpperCase() || '?';
+            const avatarUrl = comment.author?.avatar ? `http://localhost:3001/${comment.author.avatar}` : null;
+            const isMine = isMyComment(comment);
+            return (
+              <div key={comment.id} style={{ ...s.bubble, ...(isMine ? s.bubbleMine : {}) }}>
+                <div style={{ ...s.commentAvatar, ...(isMine ? s.commentAvatarMine : {}) }}>
+                  {avatarUrl ? <img src={avatarUrl} alt="" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} /> : initial}
+                </div>
+                <div style={s.bubbleContent}>
+                  <div style={s.bubbleHeader}>
+                    <span style={s.commenter}>{comment.author?.username || 'User'}</span>
+                    {isMine && (
+                      <div style={s.actions}>
+                        <button onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }} style={s.editBtn}>Edit</button>
+                        <button onClick={() => handleDelete(comment.id)} style={s.deleteBtn}>Delete</button>
+                      </div>
+                    )}
+                  </div>
+
+                  {editingId === comment.id ? (
+                    <div style={s.editBox}>
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        style={s.editTextarea}
+                        rows={2}
+                      />
+                      <div style={s.editBtns}>
+                        <button onClick={() => handleSaveEdit(comment.id)} style={s.saveBtn}>Save</button>
+                        <button onClick={() => setEditingId(null)} style={s.cancelBtn}>Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p style={s.commentText}>{comment.content}</p>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
     </div>
   );
 }
 
-const styles = {
+const s = {
   section: {
-    marginTop: '24px',
-    borderTop: '1px solid #eee',
-    paddingTop: '16px',
+    marginTop: '32px',
+    paddingTop: '28px',
+    borderTop: `2px dashed ${theme.border}`,
   },
   heading: {
-    fontSize: '16px',
-    marginBottom: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '18px',
+    fontWeight: '800',
+    color: theme.text,
+    marginBottom: '20px',
   },
-  error: {
-    color: '#e74c3c',
+  headingIcon: { fontSize: '20px' },
+  count: { color: theme.textMuted, fontWeight: '600', fontSize: '15px' },
+  errorBox: {
+    background: theme.dangerLight,
+    color: theme.danger,
+    padding: '10px 16px',
+    borderRadius: theme.radiusSm,
     fontSize: '13px',
-    marginBottom: '8px',
+    marginBottom: '12px',
+    fontWeight: '600',
   },
   form: {
-    marginBottom: '16px',
+    marginBottom: '24px',
+    background: theme.bgCardHover,
+    borderRadius: theme.radius,
+    padding: '16px',
+    border: `1px solid ${theme.border}`,
   },
-  textarea: {
-    width: '100%',
-    padding: '8px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
+  inputRow: {
+    display: 'flex',
+    gap: '12px',
+    alignItems: 'flex-start',
+  },
+  myAvatar: {
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: '800',
     fontSize: '14px',
-    resize: 'vertical',
-    boxSizing: 'border-box',
+    flexShrink: 0,
+    overflow: 'hidden',
+  },
+  myAvatarImg: { width: '100%', height: '100%', objectFit: 'cover' },
+  textarea: {
+    flex: 1,
+    padding: '10px 14px',
+    border: `2px solid ${theme.border}`,
+    borderRadius: theme.radiusSm,
+    fontSize: '14px',
+    resize: 'none',
+    outline: 'none',
+    fontFamily: 'Nunito, sans-serif',
+    color: theme.text,
+    lineHeight: '1.6',
+    transition: 'border 0.2s',
+    background: '#fff',
+  },
+  formFooter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '10px',
   },
   submitBtn: {
-    marginTop: '6px',
-    padding: '6px 16px',
-    backgroundColor: '#3498db',
+    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
     color: '#fff',
     border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
+    padding: '9px 22px',
+    borderRadius: theme.radiusPill,
+    fontWeight: '700',
     fontSize: '13px',
+    cursor: 'pointer',
+    boxShadow: '0 4px 12px rgba(167,139,250,0.3)',
+    opacity: 1,
+    transition: 'opacity 0.2s',
   },
-  noComments: {
-    color: '#999',
+  loginNote: {
+    textAlign: 'center',
+    color: theme.textMuted,
     fontSize: '14px',
+    padding: '16px',
+    background: theme.primaryLight,
+    borderRadius: theme.radiusSm,
+    marginBottom: '20px',
+  },
+  loginLink: { color: theme.primaryDark, fontWeight: '700' },
+  list: { display: 'flex', flexDirection: 'column', gap: '12px' },
+  empty: {
+    textAlign: 'center',
+    color: theme.textMuted,
     fontStyle: 'italic',
-  },
-  comment: {
-    padding: '10px',
-    borderBottom: '1px solid #f0f0f0',
-  },
-  commentHeader: {
-    marginBottom: '4px',
-  },
-  commentAuthor: {
-    fontSize: '13px',
-    color: '#2c3e50',
-  },
-  commentContent: {
+    padding: '24px',
     fontSize: '14px',
-    color: '#444',
-    margin: '4px 0',
   },
-  commentActions: {
+  bubble: {
     display: 'flex',
-    gap: '8px',
+    gap: '12px',
+    alignItems: 'flex-start',
   },
-  editActions: {
+  bubbleMine: { flexDirection: 'row' },
+  commentAvatar: {
+    width: '34px',
+    height: '34px',
+    borderRadius: '50%',
+    background: theme.mintLight,
+    color: '#059669',
     display: 'flex',
-    gap: '8px',
-    marginTop: '6px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: '800',
+    fontSize: '13px',
+    flexShrink: 0,
   },
+  commentAvatarMine: {
+    background: theme.accentLight,
+    color: theme.accentDark,
+  },
+  bubbleContent: {
+    flex: 1,
+    background: theme.bgCardHover,
+    borderRadius: '4px 16px 16px 16px',
+    padding: '12px 16px',
+    border: `1px solid ${theme.border}`,
+  },
+  bubbleHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '6px',
+  },
+  commenter: {
+    fontWeight: '700',
+    fontSize: '13px',
+    color: theme.text,
+  },
+  actions: { display: 'flex', gap: '8px' },
   editBtn: {
-    background: 'none',
-    border: 'none',
-    color: '#3498db',
-    cursor: 'pointer',
-    fontSize: '12px',
-    padding: 0,
+    background: 'none', border: 'none', color: theme.primary,
+    fontWeight: '700', fontSize: '12px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif',
   },
   deleteBtn: {
-    background: 'none',
-    border: 'none',
-    color: '#e74c3c',
-    cursor: 'pointer',
-    fontSize: '12px',
-    padding: 0,
+    background: 'none', border: 'none', color: theme.danger,
+    fontWeight: '700', fontSize: '12px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif',
   },
+  commentText: { fontSize: '14px', color: theme.text, lineHeight: '1.6' },
+  editBox: { display: 'flex', flexDirection: 'column', gap: '8px' },
+  editTextarea: {
+    width: '100%',
+    padding: '8px 12px',
+    border: `2px solid ${theme.border}`,
+    borderRadius: theme.radiusSm,
+    fontSize: '14px',
+    resize: 'none',
+    fontFamily: 'Nunito, sans-serif',
+    color: theme.text,
+    outline: 'none',
+  },
+  editBtns: { display: 'flex', gap: '8px' },
   saveBtn: {
-    padding: '4px 12px',
-    backgroundColor: '#27ae60',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '12px',
+    padding: '5px 16px', background: theme.mint, color: '#065f46',
+    border: 'none', borderRadius: theme.radiusPill, fontWeight: '700',
+    fontSize: '12px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif',
   },
   cancelBtn: {
-    padding: '4px 12px',
-    backgroundColor: '#95a5a6',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '12px',
+    padding: '5px 16px', background: theme.border, color: theme.textMuted,
+    border: 'none', borderRadius: theme.radiusPill, fontWeight: '700',
+    fontSize: '12px', cursor: 'pointer', fontFamily: 'Nunito, sans-serif',
   },
 };

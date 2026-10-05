@@ -12,6 +12,7 @@ const getProfile = async(req,res)=>{
             return res.status(404).json({message: 'user not exist!'});
         }
         const resUser = {
+            id: user.id,
             username: user.username,
             email: user.email,
             avatar: user.avatar,

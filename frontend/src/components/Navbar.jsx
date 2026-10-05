@@ -1,31 +1,53 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import theme from '../theme';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
+  const isActive = (path) => location.pathname === path;
+
+  const linkStyle = (path) => ({
+    ...s.link,
+    ...(isActive(path) ? s.linkActive : {}),
+  });
+
   return (
-    <nav style={styles.nav}>
-      <Link to="/" style={styles.brand}>📚 Knowledge Hub</Link>
-      <div style={styles.links}>
+    <nav style={s.nav}>
+      <Link to="/" style={s.brand}>
+        <span style={s.brandText}>Knowledge Hub</span>
+      </Link>
+
+      <div style={s.links}>
         {user ? (
           <>
-            <Link to="/" style={styles.link}>Home</Link>
-            <Link to="/profile" style={styles.link}>Profile</Link>
-            <Link to="/create-post" style={styles.link}>+ New Post</Link>
-            <span style={styles.username}>Hi, {user.username}</span>
-            <button onClick={handleLogout} style={styles.logoutBtn}>Logout</button>
+            <Link to="/" style={linkStyle('/')}>Home</Link>
+            <Link to="/profile" style={linkStyle('/profile')}>My Profile</Link>
+            <Link to="/create-post" style={s.writeBtn}>
+              ✏️ Write Post
+            </Link>
+            <div style={s.userChip}>
+              <div style={s.avatar}>
+                {user.avatar
+                  ? <img src={`http://localhost:3001/${user.avatar}`} alt="" style={s.avatarImg} />
+                  : <span>{user.username?.[0]?.toUpperCase()}</span>
+                }
+              </div>
+              <span style={s.username}>{user.username}</span>
+            </div>
+            <button onClick={handleLogout} style={s.logoutBtn}>Logout</button>
           </>
         ) : (
           <>
-            <Link to="/login" style={styles.link}>Login</Link>
-            <Link to="/register" style={styles.link}>Register</Link>
+            <Link to="/login" style={linkStyle('/login')}>Login</Link>
+            <Link to="/register" style={s.writeBtn}>Register</Link>
           </>
         )}
       </div>
@@ -33,46 +55,115 @@ export default function Navbar() {
   );
 }
 
-const styles = {
+const s = {
   nav: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '12px 24px',
-    backgroundColor: '#2c3e50',
-    color: '#fff',
+    padding: '14px 32px',
+    background: 'rgba(255,255,255,0.85)',
+    backdropFilter: 'blur(12px)',
+    borderBottom: `1px solid ${theme.border}`,
     position: 'sticky',
     top: 0,
     zIndex: 100,
+    boxShadow: '0 2px 20px rgba(167,139,250,0.08)',
   },
   brand: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
     textDecoration: 'none',
+  },
+  brandIcon: {
+    fontSize: '26px',
+    background: theme.primaryLight,
+    borderRadius: theme.radiusSm,
+    padding: '4px 8px',
+  },
+  brandText: {
+    fontSize: '20px',
+    fontWeight: '800',
+    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accentDark})`,
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
   },
   links: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px',
+    gap: '8px',
   },
   link: {
-    color: '#ecf0f1',
-    textDecoration: 'none',
+    color: theme.textMuted,
+    fontWeight: '600',
     fontSize: '14px',
+    padding: '6px 14px',
+    borderRadius: theme.radiusPill,
+    transition: 'all 0.2s',
+    textDecoration: 'none',
+  },
+  linkActive: {
+    background: theme.primaryLight,
+    color: theme.primaryDark,
+  },
+  writeBtn: {
+    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: '14px',
+    padding: '8px 18px',
+    borderRadius: theme.radiusPill,
+    textDecoration: 'none',
+    boxShadow: '0 4px 12px rgba(167,139,250,0.35)',
+    transition: 'all 0.2s',
+    border: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  userChip: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    background: theme.primaryLight,
+    borderRadius: theme.radiusPill,
+    padding: '4px 14px 4px 4px',
+    marginLeft: '4px',
+  },
+  avatar: {
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: '700',
+    fontSize: '12px',
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
   },
   username: {
-    color: '#f39c12',
-    fontSize: '14px',
-    fontWeight: '600',
+    color: theme.primaryDark,
+    fontWeight: '700',
+    fontSize: '13px',
   },
   logoutBtn: {
-    background: '#e74c3c',
-    color: '#fff',
+    background: theme.dangerLight,
+    color: theme.danger,
     border: 'none',
-    padding: '6px 14px',
-    borderRadius: '4px',
-    cursor: 'pointer',
+    padding: '7px 16px',
+    borderRadius: theme.radiusPill,
+    fontWeight: '700',
     fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
   },
 };
