@@ -9,7 +9,7 @@ const cors = require('cors');
 //bridge prot talking
 app.set('trust proxy', 1); // Trust proxy (required for Railway and secure cookies)
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // Allow Vite's default port as well just in case
+    origin: ['http://localhost:3000', 'http://localhost:5173', 'https://my-hub-steel-tau.vercel.app'], // Allow Vite's default port as well just in case
     credentials: true
 }))
 
