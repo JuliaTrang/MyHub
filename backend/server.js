@@ -53,7 +53,7 @@ db.sequelize.sync({ alter: true})
 })
 
 //xu ly input vao server (client->server)
-const port = 3001;
+const port = process.env.PORT || 3001;
 app.listen(port,()=>{
     console.log('server listening at',port);
 })
