@@ -74,7 +74,7 @@ export default function CommentSection({ postId, comments: initialComments }) {
           <div style={s.inputRow}>
             <div style={s.myAvatar}>
               {user.avatar
-                ? <img src={`http://localhost:3001/${user.avatar}`} alt="" style={s.myAvatarImg} />
+                ? <img src={`https://zonal-growth-production-561c.up.railway.app/${user.avatar}`} alt="" style={s.myAvatarImg} />
                 : <span>{user.username?.[0]?.toUpperCase()}</span>
               }
             </div>
@@ -105,7 +105,7 @@ export default function CommentSection({ postId, comments: initialComments }) {
         ) : (
           comments.map((comment, i) => {
             const initial = comment.author?.username?.[0]?.toUpperCase() || '?';
-            const avatarUrl = comment.author?.avatar ? `http://localhost:3001/${comment.author.avatar}` : null;
+            const avatarUrl = comment.author?.avatar ? `https://zonal-growth-production-561c.up.railway.app/${comment.author.avatar}` : null;
             const isMine = isMyComment(comment);
             return (
               <div key={comment.id} style={{ ...s.bubble, ...(isMine ? s.bubbleMine : {}) }}>

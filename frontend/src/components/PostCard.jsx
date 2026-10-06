@@ -15,11 +15,11 @@ export default function PostCard({ post, index = 0 }) {
   const [isHovered, setIsHovered] = useState(false);
 
   const thumbnailUrl = post.thumbnail
-    ? `http://localhost:3001/${post.thumbnail}`
+    ? `https://zonal-growth-production-561c.up.railway.app/${post.thumbnail}`
     : null;
 
   const gradient = GRADIENTS[index % GRADIENTS.length];
-  const authorAvatarUrl = post.author?.avatar ? `http://localhost:3001/${post.author.avatar}` : null;
+  const authorAvatarUrl = post.author?.avatar ? `https://zonal-growth-production-561c.up.railway.app/${post.author.avatar}` : null;
   const authorInitial = post.author?.username?.[0]?.toUpperCase() || '?';
   const commentCount = post.comments?.length ?? 0;
   const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';

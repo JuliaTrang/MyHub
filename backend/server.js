@@ -7,8 +7,9 @@ const db = require('./models');
 const cors = require('cors');
 
 //bridge prot talking
+app.set('trust proxy', 1); // Trust proxy (required for Railway and secure cookies)
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://localhost:5173'], // Allow Vite's default port as well just in case
     credentials: true
 }))
 
@@ -31,9 +32,9 @@ app.use(session({
     saveUninitialized: false,
     cookie:{
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'none', // Needed for cross-domain cookies
         maxAge: 24*60*60*1000,
-        secure: false
+        secure: true // Needed for sameSite: 'none'
     }
 }))
 

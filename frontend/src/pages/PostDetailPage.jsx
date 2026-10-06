@@ -117,7 +117,7 @@ export default function PostDetailPage() {
   );
   if (!post) return null;
 
-  const thumbnailUrl = post.thumbnail ? `http://localhost:3001/${post.thumbnail}` : null;
+  const thumbnailUrl = post.thumbnail ? `https://zonal-growth-production-561c.up.railway.app/${post.thumbnail}` : null;
   const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
 
   return (
@@ -171,7 +171,7 @@ export default function PostDetailPage() {
               <div style={s.meta}>
                 <div style={s.authorChip}>
                   <div style={s.authorAvatar}>
-                    {post.author?.avatar ? <img src={`http://localhost:3001/${post.author.avatar}`} alt="" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} /> : (post.author?.username?.[0]?.toUpperCase() || '?')}
+                    {post.author?.avatar ? <img src={`https://zonal-growth-production-561c.up.railway.app/${post.author.avatar}`} alt="" style={{width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover'}} /> : (post.author?.username?.[0]?.toUpperCase() || '?')}
                   </div>
                   <span style={s.authorName}>{post.author?.username || 'Unknown'}</span>
                 </div>

@@ -36,7 +36,7 @@ export default function Navbar() {
             <div style={s.userChip}>
               <div style={s.avatar}>
                 {user.avatar
-                  ? <img src={`http://localhost:3001/${user.avatar}`} alt="" style={s.avatarImg} />
+                  ? <img src={`https://zonal-growth-production-561c.up.railway.app/${user.avatar}`} alt="" style={s.avatarImg} />
                   : <span>{user.username?.[0]?.toUpperCase()}</span>
                 }
               </div>
