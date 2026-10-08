@@ -1,6 +1,21 @@
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import theme from '../theme';
+
+const HoverLink = ({ to, style, hoverStyle, children }) => {
+  const [hover, setHover] = useState(false);
+  return (
+    <Link
+      to={to}
+      style={{ ...style, ...(hover ? hoverStyle : {}) }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {children}
+    </Link>
+  );
+};
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -28,11 +43,11 @@ export default function Navbar() {
       <div style={s.links}>
         {user ? (
           <>
-            <Link to="/" style={linkStyle('/')}>Home</Link>
-            <Link to="/profile" style={linkStyle('/profile')}>My Profile</Link>
-            <Link to="/create-post" style={s.writeBtn}>
+            <HoverLink to="/" style={linkStyle('/')} hoverStyle={s.linkHover}>Home</HoverLink>
+            <HoverLink to="/profile" style={linkStyle('/profile')} hoverStyle={s.linkHover}>My Profile</HoverLink>
+            <HoverLink to="/create-post" style={s.writeBtn} hoverStyle={s.writeBtnHover}>
               Write Post
-            </Link>
+            </HoverLink>
             <div style={s.userChip}>
               <div style={s.avatar}>
                 {user.avatar
@@ -42,12 +57,19 @@ export default function Navbar() {
               </div>
               <span style={s.username}>{user.username}</span>
             </div>
-            <button onClick={handleLogout} style={s.logoutBtn}>Logout</button>
+            <button
+              onClick={handleLogout}
+              style={s.logoutBtn}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = 0.8}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = 1}
+            >
+              Logout
+            </button>
           </>
         ) : (
           <>
-            <Link to="/login" style={linkStyle('/login')}>Login</Link>
-            <Link to="/register" style={s.writeBtn}>Register</Link>
+            <HoverLink to="/login" style={linkStyle('/login')} hoverStyle={s.linkHover}>Login</HoverLink>
+            <HoverLink to="/register" style={s.writeBtn} hoverStyle={s.writeBtnHover}>Register</HoverLink>
           </>
         )}
       </div>
@@ -94,6 +116,10 @@ const s = {
     transition: 'all 0.2s',
     textDecoration: 'none',
   },
+  linkHover: {
+    color: theme.primaryDark,
+    background: theme.primaryLight,
+  },
   linkActive: {
     background: theme.bgCardHover,
     color: theme.text,
@@ -112,6 +138,11 @@ const s = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '6px',
+  },
+  writeBtnHover: {
+    background: theme.primaryDark,
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
   },
   userChip: {
     display: 'flex',

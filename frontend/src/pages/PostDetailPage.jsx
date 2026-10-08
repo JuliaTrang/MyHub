@@ -6,6 +6,20 @@ import CommentSection from '../components/CommentSection';
 import RichTextEditor from '../components/RichTextEditor';
 import theme from '../theme';
 
+const HoverLink = ({ to, style, hoverStyle, children }) => {
+  const [hover, setHover] = useState(false);
+  return (
+    <Link
+      to={to}
+      style={{ ...style, ...(hover ? hoverStyle : {}) }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {children}
+    </Link>
+  );
+};
+
 export default function PostDetailPage() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -124,7 +138,7 @@ export default function PostDetailPage() {
     <div style={s.page}>
       <div style={s.container}>
         {/* Back link */}
-        <Link to="/" style={s.backLink}>← Back to Home</Link>
+        <HoverLink to="/" style={s.backLink} hoverStyle={s.backLinkHover}>← Back to Home</HoverLink>
 
         {error && <div style={s.errorBox}>{error}</div>}
 
@@ -250,9 +264,17 @@ const s = {
   },
   loadingText: { color: theme.textMuted, fontWeight: '500', fontSize: '14px' },
   backLink: {
-    display: 'inline-flex', alignItems: 'center', gap: '4px',
-    color: theme.textMuted, fontWeight: '600', fontSize: '14px',
-    marginBottom: '16px', textDecoration: 'none',
+    display: 'inline-flex', alignItems: 'center', gap: '8px',
+    color: theme.text, fontWeight: '600', fontSize: '14px',
+    marginBottom: '20px', textDecoration: 'none',
+    padding: '8px 16px', borderRadius: theme.radiusSm,
+    background: '#fff', border: `1px solid ${theme.border}`,
+    transition: 'all 0.2s',
+  },
+  backLinkHover: {
+    background: theme.bgCardHover,
+    color: theme.primaryDark,
+    borderColor: theme.borderFocus,
   },
   errorBox: {
     background: theme.dangerLight, color: theme.danger,
