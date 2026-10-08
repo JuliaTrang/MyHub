@@ -1,48 +1,48 @@
-// Sage Green + Cream design tokens — MyHub (DESIGN.md)
+// Pastel design tokens — single source of truth for the whole app
 const theme = {
-  // Colors — sage green palette
-  bg: '#E8EDE3',            // sage cream — page background
-  bgCard: '#F5F3EE',        // warm white — card/surface
-  bgCardHover: '#EEF0E9',   // hover tint
+  // Colors
+  bg: '#F0EEFF',
+  bgCard: '#FFFFFF',
+  bgCardHover: '#FAF8FF',
 
-  primary: '#4A7C4E',       // forest green — primary accent
-  primaryDark: '#2F5C33',   // deep moss
-  primaryLight: '#D6E8D7',  // light sage tint
+  primary: '#A78BFA',       // muted violet
+  primaryDark: '#7C3AED',
+  primaryLight: '#EDE9FE',
 
-  accent: '#A8B99A',        // muted sage — pill/chip background
-  accentDark: '#8DA882',    // pill hover
-  accentLight: '#E4EDE0',   // very light sage
+  accent: '#F9A8D4',        // blush pink
+  accentDark: '#EC4899',
+  accentLight: '#FCE7F3',
 
-  mint: '#6EBF74',          // fresh green variant
-  mintLight: '#D4EED6',
+  mint: '#6EE7B7',
+  mintLight: '#D1FAE5',
 
-  peach: '#D4A96A',         // warm amber — optional highlight
-  peachLight: '#F5E8D0',
+  peach: '#FDBA74',
+  peachLight: '#FEF3C7',
 
-  coral: '#C0544A',         // error/warning red (muted)
+  coral: '#FB923C',
 
-  text: '#2B2B2B',          // dark charcoal — heading
-  textMuted: '#5A5A5A',     // warm gray — body
-  textLight: '#9B9B9B',     // light gray — footer/caption
+  text: '#4a4063',
+  textMuted: '#9184b5',
+  textLight: '#c4b5f4',
 
-  border: '#C5D1BC',        // soft sage border
-  borderFocus: '#4A7C4E',   // focus ring
+  border: '#E8DFFF',
+  borderFocus: '#A78BFA',
 
-  danger: '#C0544A',
-  dangerLight: '#F5E0DE',
-  success: '#4A7C4E',
-  successLight: '#D6E8D7',
+  danger: '#F87171',
+  dangerLight: '#FEE2E2',
+  success: '#34D399',
+  successLight: '#D1FAE5',
 
   // Spacing
-  radius: '14px',
-  radiusSm: '8px',
-  radiusLg: '20px',
+  radius: '16px',
+  radiusSm: '10px',
+  radiusLg: '24px',
   radiusPill: '999px',
 
-  // Shadows — very light, natural
-  shadow: '0 2px 12px rgba(74,124,78,0.08)',
-  shadowHover: '0 6px 24px rgba(74,124,78,0.14)',
-  shadowCard: '0 2px 8px rgba(0,0,0,0.06)',
+  // Shadows
+  shadow: '0 4px 24px rgba(167,139,250,0.10)',
+  shadowHover: '0 8px 32px rgba(167,139,250,0.18)',
+  shadowCard: '0 2px 16px rgba(167,139,250,0.08)',
 };
 
 export default theme;

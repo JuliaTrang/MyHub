@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import theme from '../theme';
 
 const GRADIENTS = [
-  'linear-gradient(135deg, #D6E8D7, #8DA882)',
-  'linear-gradient(135deg, #E8EDE3, #A8B99A)',
-  'linear-gradient(135deg, #D4EED6, #6EBF74)',
-  'linear-gradient(135deg, #F5F3EE, #C5D1BC)',
+  'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
+  'linear-gradient(135deg, #a1c4fd, #c2e9fb)',
+  'linear-gradient(135deg, #d4fc79, #96e6a1)',
+  'linear-gradient(135deg, #ffecd2, #fcb69f)',
+  'linear-gradient(135deg, #e0c3fc, #8ec5fc)',
+  'linear-gradient(135deg, #f093fb, #f5576c33)',
 ];
 
 export default function PostCard({ post, index = 0 }) {
@@ -135,7 +137,7 @@ const s = {
     width: '24px',
     height: '24px',
     borderRadius: '50%',
-    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accentDark})`,
+    background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
     color: '#fff',
     display: 'flex',
     alignItems: 'center',

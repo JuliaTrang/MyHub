@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="MyHub — Manage and explore student records with ease." />
-  <title>MyHub · Student Manager</title>
+  <title>Knowledge Hub ✨</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,31 +11,22 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Nunito', sans-serif;
-      background: #E8EDE3;
-      color: #2B2B2B;
+      background: #F0EEFF;
+      color: #4a4063;
       min-height: 100vh;
     }
     a { text-decoration: none; color: inherit; }
     button { font-family: 'Nunito', sans-serif; cursor: pointer; }
-    input, textarea, select { font-family: 'Nunito', sans-serif; outline: none; }
-    input:focus, textarea:focus, select:focus {
-      border-color: #4A7C4E !important;
-      box-shadow: 0 0 0 3px rgba(74,124,78,0.15) !important;
-    }
-    /* Scrollbar — sage */
+    input, textarea, select { font-family: 'Nunito', sans-serif; }
+    /* Quill editor overrides */
+    .ql-toolbar { border-radius: 12px 12px 0 0 !important; border-color: #d8cef6 !important; background: #faf8ff; }
+    .ql-container { border-radius: 0 0 12px 12px !important; border-color: #d8cef6 !important; font-family: 'Nunito', sans-serif !important; font-size: 15px; min-height: 200px; }
+    .ql-editor { min-height: 200px; line-height: 1.7; }
+    .ql-editor.ql-blank::before { color: #b8aed4; font-style: normal; }
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #E8EDE3; }
-    ::-webkit-scrollbar-thumb { background: #A8B99A; border-radius: 3px; }
-    /* Smooth transitions for interactive elements */
-    button, a { transition: all 0.2s ease; }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.5; }
-    }
+    ::-webkit-scrollbar-track { background: #f0eeff; }
+    ::-webkit-scrollbar-thumb { background: #c4b5f4; border-radius: 3px; }
   </style>
 </head>
 <body>

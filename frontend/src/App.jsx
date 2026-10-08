@@ -14,7 +14,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Navbar />
-        <main style={{ backgroundColor: '#E8EDE3', minHeight: 'calc(100vh - 56px)' }}>
+        <main style={{ backgroundColor: '#f5f6fa', minHeight: 'calc(100vh - 52px)' }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -29,5 +29,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-
-
