@@ -235,8 +235,8 @@ export default function PostDetailPage() {
 }
 
 const s = {
-  page: { background: theme.bg, minHeight: 'calc(100vh - 65px)', padding: '48px 0 80px' },
-  container: { maxWidth: '780px', margin: '0 auto', padding: '0 24px' },
+  page: { background: theme.bg, minHeight: 'calc(100vh - 65px)', padding: '24px 0 60px' },
+  container: { maxWidth: '780px', margin: '0 auto', padding: '0 16px' },
   center: {
     display: 'flex', flexDirection: 'column', alignItems: 'center',
     justifyContent: 'center', minHeight: '60vh', gap: '12px',
@@ -252,12 +252,12 @@ const s = {
   backLink: {
     display: 'inline-flex', alignItems: 'center', gap: '4px',
     color: theme.textMuted, fontWeight: '600', fontSize: '14px',
-    marginBottom: '24px', textDecoration: 'none',
+    marginBottom: '16px', textDecoration: 'none',
   },
   errorBox: {
     background: theme.dangerLight, color: theme.danger,
-    padding: '16px 24px', borderRadius: theme.radiusSm,
-    fontWeight: '500', fontSize: '14px', marginBottom: '20px',
+    padding: '12px 20px', borderRadius: theme.radiusSm,
+    fontWeight: '500', fontSize: '14px', marginBottom: '16px',
     border: `1px solid rgba(248,113,113,0.2)`
   },
   article: {
@@ -266,28 +266,28 @@ const s = {
   },
   thumbnailWrap: { width: '100%', maxHeight: '420px', overflow: 'hidden', borderBottom: `1px solid ${theme.border}` },
   thumbnail: { width: '100%', height: '420px', objectFit: 'cover' },
-  articleHeader: { padding: '40px 48px 24px' },
-  postTitle: { fontSize: '36px', fontWeight: '700', color: theme.text, marginBottom: '16px', lineHeight: '1.3' },
-  meta: { display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' },
-  authorChip: { display: 'flex', alignItems: 'center', gap: '10px' },
+  articleHeader: { padding: '32px 32px 16px' },
+  postTitle: { fontSize: '32px', fontWeight: '700', color: theme.text, marginBottom: '12px', lineHeight: '1.3' },
+  meta: { display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' },
+  authorChip: { display: 'flex', alignItems: 'center', gap: '8px' },
   authorAvatar: {
-    width: '36px', height: '36px', borderRadius: '50%',
+    width: '32px', height: '32px', borderRadius: '50%',
     background: theme.primary,
     color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontWeight: '600', fontSize: '14px',
   },
-  authorName: { fontWeight: '600', fontSize: '15px', color: theme.text },
-  date: { color: theme.textMuted, fontSize: '14px', fontWeight: '500' },
+  authorName: { fontWeight: '600', fontSize: '14px', color: theme.text },
+  date: { color: theme.textMuted, fontSize: '13px', fontWeight: '500' },
   content: {
-    padding: '0 48px 40px',
-    fontSize: '17px', lineHeight: '1.9', color: theme.text,
+    padding: '0 32px 32px',
+    fontSize: '16px', lineHeight: '1.7', color: theme.text,
     // Quill content styles
   },
   ownerPanel: {
-    margin: '0 48px 40px',
+    margin: '0 32px 32px',
     background: theme.bgCardHover,
     borderRadius: theme.radiusSm,
-    padding: '24px',
+    padding: '20px',
     border: `1px solid ${theme.border}`,
   },
   ownerPanelTitle: { fontSize: '15px', fontWeight: '700', color: theme.text, marginBottom: '16px' },

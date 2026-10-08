@@ -75,23 +75,23 @@ export default function HomePage() {
 const s = {
   page: { background: theme.bg, minHeight: '100%' },
   hero: {
-    background: theme.bgCard,
+    background: theme.primaryLight,
     borderBottom: `1px solid ${theme.border}`,
-    padding: '64px 32px',
+    padding: '40px 24px',
     textAlign: 'center',
   },
   heroTitle: {
-    fontSize: '32px', fontWeight: '700', color: theme.text, marginBottom: '12px',
+    fontSize: '28px', fontWeight: '800', color: theme.primaryDark, marginBottom: '8px',
   },
-  heroSub: { color: theme.textMuted, fontSize: '16px', fontWeight: '500', marginBottom: '24px' },
+  heroSub: { color: theme.textMuted, fontSize: '15px', fontWeight: '500', marginBottom: '20px' },
   heroBtn: {
     display: 'inline-block',
-    background: theme.primaryDark,
+    background: theme.primary,
     color: '#fff', padding: '10px 24px', borderRadius: theme.radiusSm,
     fontWeight: '600', fontSize: '14px', textDecoration: 'none',
     transition: 'opacity 0.2s',
   },
-  container: { maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' },
+  container: { maxWidth: '1100px', margin: '0 auto', padding: '24px' },
   loadingWrap: {
     display: 'flex', flexDirection: 'column', alignItems: 'center',
     justifyContent: 'center', minHeight: '60vh', gap: '16px',
@@ -111,12 +111,12 @@ const s = {
     border: `1px solid rgba(248,113,113,0.2)`,
   },
   sectionTitle: {
-    fontSize: '18px', fontWeight: '700', color: theme.text, marginBottom: '24px',
+    fontSize: '18px', fontWeight: '700', color: theme.text, marginBottom: '20px',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '24px',
+    gap: '20px',
   },
   empty: {
     textAlign: 'center', padding: '80px 24px',
