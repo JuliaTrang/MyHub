@@ -91,7 +91,7 @@ const s = {
     fontWeight: '600', fontSize: '14px', textDecoration: 'none',
     transition: 'opacity 0.2s',
   },
-  container: { maxWidth: '1100px', margin: '0 auto', padding: '24px' },
+  container: { maxWidth: '780px', margin: '0 auto', padding: '24px' },
   loadingWrap: {
     display: 'flex', flexDirection: 'column', alignItems: 'center',
     justifyContent: 'center', minHeight: '60vh', gap: '16px',
@@ -111,12 +111,13 @@ const s = {
     border: `1px solid rgba(248,113,113,0.2)`,
   },
   sectionTitle: {
-    fontSize: '18px', fontWeight: '700', color: theme.text, marginBottom: '20px',
+    fontSize: '20px', fontWeight: '700', color: theme.text, marginBottom: '24px',
+    borderBottom: `1px solid ${theme.border}`, paddingBottom: '12px',
   },
   grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '32px',
   },
   empty: {
     textAlign: 'center', padding: '80px 24px',
